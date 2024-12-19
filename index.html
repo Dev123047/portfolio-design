@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-Size Flexbox Layout</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js" ></script>
+    <script src="errors.js" defer></script>
+    <script src="antierrors.js" defer></script>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="row-flex-container" id="GUIContainer">
+            <div class="row-item" id="dirStructure"></div>
+            <div class="verticleResizer" id="dirStructure_contents_resizer"></div>
+            <div class="row-item" id="contents">
+                <div class="column-flex-container" id="contentsContainer">
+                    <div class="column-item" id="currentLocation"></div>
+                    <div class="horizontalResizer" id = "currentLocation_locationContents_resizer"></div>
+                    <div class="column-item" id="locationContents">abc</div>
+                </div>
+            </div>
+        </div>
+        <div class="horizontalResizer" id="GUIContainer_terminalContainer_resizer"></div>
+        <div class="column-flex-container" id="terminalContainer">
+            <div class="column-item" id="terminal">
+            </div>
+            <style>
+                @font-face {
+                    font-family: CascadiaCode;
+                    src: url(CascadiaCode.ttf);
+                }
+                .terminal {
+                    --color: rgba(0, 200, 0, 0.99);
+                    --glow: 1;
+                    --font: CascadiaCode;
+                    --size: 1.5;
+                } 
+                .cmd-prompt {
+                    --color: blue;
+                }   
+                .cmd{
+                    --color: red;
+                }
+                :root {
+                    --background: #0a1242;
+                }
+            </style>
+            <script>
+                function change(cwd) {
+                    $('#currentLocation').html(cwd.split("/").at(-1)+" ["+cwd+"]");
+                }
+                var initialized = "True";
+                var current_username = "test_user1";
+                var current_data = "";
+                var d = cwd;
+                var x = '';
+                var out1 = [];
+                var cwd = '/test_user1';
+                var prompt1 = () => "test_user1@localhost: "+cwd+"$";
+                var initalize = true;
+                change(cwd);
+                var current_data = {
+"/test_user1":["/test_user1/subdir1","/test_user1/subdir2","/test_user1/readme.txt",{"readme.txt":"Hello! This is the first text file!"}],
+"/test_user1/subdir1":["/test_user1/subdir1/readme2.txt","/test_user1/subdir1/puzzle.txt",{"readme2.txt":"Hello! This is the second text file!","puzzle.txt":"This is where you will get a puzzle to solve!"}],
+"/test_user1/subdir2":["/test_user1/subdir2/nested","/test_user1/subdir2/test.txt",{"test.txt":"Hello! This is the test text file!"}],
+"/test_user1/subdir2/nested":["/test_user1/subdir2/nested/puzzle2.txt",{"puzzle2.txt":"This is another file where you can find a puzzle"}]
+}
+                function disableRightClick() {  
+                    return false; 
+                }
+                function lsv2(d=cwd) {
+                    const out0 = current_data[d];
+                    for(let i=0; i<(out0.length-1); i++) {
+                        x = out0[i]
+                        out1.push(x)
+                        if (x in current_data) {
+                            lsv2(d=x)
+                        }
+                    }
+                    return
+                }
+                function ls(arg = "al") {
+                    out0 = current_data[cwd]
+                    out1 = []
+                    if (arg === "td") {
+                        for(let i=0; i<(out0.length)-1; i++) {
+                            out1.push(out0[i]);
+                        }
+                        return out1
+                    } else if (arg == "al") {
+                        lsv2()
+                        return out1
+                    }
+                }
+                var term = $('#terminal').terminal({
+                    initialize: async function(){
+                        initalize = true;
+                    },
+                    ls: async function(arg) {
+                        out0 = current_data[cwd]
+                        out1 = []
+                        if (arg === "td") {
+                            for(let i=0; i<(out0.length)-1; i++) {
+                                out1.push(out0[i]);
+                            }
+                            for(let i=0;i<out1.length;i++) {
+                                this.echo(out1[i])
+                            }
+                        } else if (arg == "al") {
+                            lsv2()
+                            for(let i=0;i<out1.length;i++) {
+                                this.echo(out1[i])
+                            }
+                        }
+                    },
+                    cd: function(dir) {
+                        if (dir === "..") {
+                            const dirs = Object.keys(current_data)
+                            for (let i=0; i<(dirs.length);i++) {
+                                if (current_data[dirs[i]].includes(cwd)){
+                                    cwd = dirs[i]
+                                    this.echo(dir_changed)
+                                } else {
+                                    continue
+                                }
+                            }
+                        } else if(dir === "") {
+                            cwd = Object.keys(current_data)[0]
+                        } else {
+                            requested_dir = cwd+"/"+dir
+                            if (ls().includes(requested_dir)) {
+                                this.echo(dir_found)
+                                cwd = requested_dir;
+                                this.echo(dir_changed)
+                            } else {
+                                this.error(dir_not_found)
+                            }
+                        }
+                        change(cwd)
+                    },
+                    getcwd: function() {
+                        this.echo(cwd)
+                    },
+                    cat: function(file) {
+                        if (file in current_data[cwd][(current_data[cwd].length)-1]) {
+                            this.echo(file_found)
+                            if(current_data[cwd][(current_data[cwd].length)-1][file] != '') {
+                                this.echo('[[g; black; yellow;]'+file+']')
+                                this.echo(current_data[cwd][(current_data[cwd].length)-1][file])
+                            } else {
+                                this.error(not_authorized)
+                            }
+                        } else {
+                            this.error(file_not_found)
+                        }
+                    }
+                }, {
+                    completion: true,
+                    keymap: {
+                        ENTER: function(e, original) {
+                        var was_initalize = this.get_command().match(/^\s*initialize\s*$/);
+                            if (!initalize && !was_initalize) {
+                                this.echo('Initialize')
+                            } else {
+                                original()
+                            }
+                        }
+                    },
+                    greetings: "Welcome to Crystal Soteria"
+                });
+                term.set_prompt(prompt1);
+            </script>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

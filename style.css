@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: CascadiaCode;
+}
+
+html, body {
+    height: 100%; /* Full height for html and body */
+    width: 100%; /* Full width for html and body */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh; /* Full height for the container */
+    width: 100%; /* Full width for the container */
+}
+
+.row-flex-container {
+    display: flex;
+    flex-direction: row; /* Row layout */
+    justify-content: space-around; /* Space items evenly */
+    width: 100%; /* Full width of the row container */
+    flex: auto; /* Take up remaining space */
+    background-color: #4CAF50; /* Green background */
+    height: 100%;
+}
+
+.row-item {
+    background-color: #0a1242; /* White background for items */
+    flex: auto; /* Equal width for all items */
+    overflow: auto;
+}
+
+.column-flex-container {
+    display: flex;
+    flex-direction: column; /* Column layout */
+    align-items: center; /* Center items horizontally */
+    width: 100%; /* Full width of the column container */
+    flex: auto; /* Take up remaining space */
+    height: 100%;
+    background-color: #2196F3; /* Blue background */
+}
+
+.column-item {
+    background-color: #0a1242; /* White background for items */
+    width: 100%; /* Full width for column items */
+    flex: auto;
+    overflow: auto;
+}
+
+.horizontalResizer {
+    height: 3px;
+    width: 100%;
+    background-color: #091038;
+    cursor: ns-resize;
+    position: relative;
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.2), 0 10px 20px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.verticleResizer {
+    width: 3px;
+    height: 100%;
+    background-color: #091038;
+    cursor: ew-resize;
+    position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 1;
+}
+
+#GUIContainer {
+    height: 60%;
+    
+}
+#terminalContainer {
+    height: 40%;
+}
+#dirStructure {
+    width: 15%;
+}
+#contents {
+    width: 85%;
+}
+#currentLocation {
+    height: 15%;
+    padding-left: 10px;
+    padding-top: 10px;
+    font-size:xx-large;
+}
+#locationContents {
+    height: 85%;
+}
+#location {
+    width: auto;
+    font-size: large;
+    display: flex;
+    align-items: center;
+    height: 100%; /* Ensure the parent element has a defined height */
+}
+#name {
+    width: auto;
+}
