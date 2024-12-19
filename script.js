@@ -54,3 +54,86 @@ document.addEventListener('mouseup', () => {
     isResizing_dSc = false;
     isResizing_cLlC = false;
 });
+
+function generateFileTree(data, parentPath = "") {
+    let treeHTML = "<ul>";
+    for (let i = 0; i < data.length - 1; i++) {
+      let item = data[i];
+      let itemPath = parentPath
+      ?`${parentPath}/${item.split("/").pop()}`
+      : item;
+
+      if (item in current_data) {
+        // Directory: Add a clickable item with a recursive call
+        treeHTML += `<li class="directory" data-path="${itemPath}">
+                    <span>${itemPath.split("/").pop()}</span>
+                    ${generateFileTree(current_data[item], itemPath)}
+                </li>`;
+      } else {
+        // File: Add a clickable item
+        treeHTML += `<li class="file" data-path="${itemPath}">
+                    <span>${itemPath.split("/").pop()}</span>
+                </li>`;
+      }
+    }
+    treeHTML += "</ul>";
+    return treeHTML;
+  }
+
+  function renderFileTree() {
+    const dirStructure = document.getElementById("dirStructure");
+    dirStructure.innerHTML = generateFileTree(
+      current_data["/test_user1"],
+      "/test_user1"
+    );
+  }
+
+  function handleFileClicks() {
+    document
+      .getElementById("dirStructure")
+      .addEventListener("click", (e) => {
+        const target = e.target.closest("li");
+        if (target) {
+          const path = target.dataset.path;
+
+          if (target.classList.contains("directory")) {
+            // Toggle visibility of nested content
+            const nestedList = target.querySelector("ul");
+            if (nestedList) {
+              nestedList.style.display =
+                nestedList.style.display === "none" ? "block" : "none";
+            }
+
+            // Update current location
+            const currentLocation =
+              document.getElementById("currentLocation");
+            currentLocation.textContent = path.split("/").at(-1)+" ["+path+"]";
+            const locationContents = document.getElementById("locationContents");
+            locationContents.innerHTML = "Select a file to view its content.";
+          } else if (target.classList.contains("file")) {
+            // Display file content in locationContents
+            const fileName = path.split("/").pop();
+            const parentPath = path.slice(0, path.lastIndexOf("/"));
+            const fileContent =
+              current_data[parentPath][
+                current_data[parentPath].length - 1
+              ][fileName];
+
+            const locationContents =
+              document.getElementById("locationContents");
+            locationContents.innerHTML =
+              fileContent || "File is empty.";
+
+            // Update current location
+            const currentLocation =
+              document.getElementById("currentLocation");
+            currentLocation.textContent = path.split("/").at(-1)+" ["+path+"]";
+          }
+        }
+      });
+  }
+
+  window.onload = function () {
+    renderFileTree();
+    handleFileClicks();
+  };

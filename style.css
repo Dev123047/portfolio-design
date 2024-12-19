@@ -88,26 +88,60 @@ body {
 }
 #dirStructure {
     width: 15%;
+    padding-top: 15px;
+    background-color: #0d1859;
+    color: wheat;
+    text-shadow: 2px 2px 2px rgba(0,0,0, 0.25);
 }
 #contents {
     width: 85%;
 }
 #currentLocation {
-    height: 15%;
-    padding-left: 10px;
-    padding-top: 10px;
-    font-size:xx-large;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #0d1859;
+    padding: 15px;
+    text-align: center;
 }
 #locationContents {
     height: 85%;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: #101e63;
 }
-#location {
-    width: auto;
-    font-size: large;
-    display: flex;
-    align-items: center;
-    height: 100%; /* Ensure the parent element has a defined height */
-}
+
 #name {
     width: auto;
+}
+
+#dirStructure ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+#dirStructure li {
+    cursor: pointer;
+}
+
+#dirStructure li span {
+    display: inline-block;
+    margin: 5px 0;
+}
+
+.directory > span::before {
+    content: "📂 ";
+}
+
+.file > span::before {
+    content: "📄 ";
+}
+
+.directory ul {
+    display: none; /* Initially collapse directories */
+}
+
+.directory ul.visible {
+    display: block;
 }
