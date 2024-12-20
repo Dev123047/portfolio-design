@@ -56,37 +56,41 @@ document.addEventListener('mouseup', () => {
 });
 
 function generateFileTree(data, parentPath = "") {
-    let treeHTML = "<ul>";
-    for (let i = 0; i < data.length - 1; i++) {
+  let treeHTML = "<ul>";
+  for (let i = 0; i < data.length - 1; i++) {
       let item = data[i];
-      let itemPath = parentPath
-      ?`${parentPath}/${item.split("/").pop()}`
-      : item;
+      let itemPath = parentPath ? `${parentPath}/${item.split("/").pop()}` : item;
+      let fileName = item.split("/").pop();
+      let icon = "🗀"; // Default icon for directories
 
       if (item in current_data) {
-        // Directory: Add a clickable item with a recursive call
-        treeHTML += `<li class="directory" data-path="${itemPath}">
-                    <span>${itemPath.split("/").pop()}</span>
-                    ${generateFileTree(current_data[item], itemPath)}
-                </li>`;
+          // Directory: Assign a folder icon
+          icon = "🗀";
+          treeHTML += `<li class="directory" data-path="${itemPath}">
+                          <span>${icon} ${fileName}</span>
+                          ${generateFileTree(current_data[item], itemPath)}
+                      </li>`;
       } else {
-        // File: Add a clickable item
-        treeHTML += `<li class="file" data-path="${itemPath}">
-                    <span>${itemPath.split("/").pop()}</span>
-                </li>`;
-      }
-    }
-    treeHTML += "</ul>";
-    return treeHTML;
-  }
+          // File: Assign icons based on file extension
+          if (fileName.endsWith(".txt")) {
+              icon = "🗎"; // Text file icon
+          } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+              icon = "📷"; // Image file icon
+          }
 
-  function renderFileTree() {
-    const dirStructure = document.getElementById("dirStructure");
-    dirStructure.innerHTML = generateFileTree(
-      current_data["/test_user1"],
-      "/test_user1"
-    );
+          treeHTML += `<li class="file" data-path="${itemPath}">
+                          <span>${icon} ${fileName}</span>
+                      </li>`;
+      }
   }
+  treeHTML += "</ul>";
+  return treeHTML;
+}
+
+function renderFileTree() {
+  const dirStructure = document.getElementById("dirStructure");
+  dirStructure.innerHTML = generateFileTree(current_data["/test_user1"], "/test_user1");
+}
 
   function handleFileClicks() {
     document
