@@ -89,7 +89,7 @@ function generateFileTree(data, parentPath = "") {
 
 function renderFileTree() {
   const dirStructure = document.getElementById("dirStructure");
-  dirStructure.innerHTML = generateFileTree(current_data["/test_user1"], "/test_user1");
+  dirStructure.innerHTML = generateFileTree(current_data["/bhavy_garg"], "/bhavy_garg");
 }
 
   function handleFileClicks() {
